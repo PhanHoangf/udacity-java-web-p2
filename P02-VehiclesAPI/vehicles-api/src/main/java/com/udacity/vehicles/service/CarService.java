@@ -22,7 +22,7 @@ public class CarService {
     private final PriceClient priceClient;
     private final MapsClient mapsClient;
 
-    public CarService(
+    public CarService (
             CarRepository repository,
             PriceClient client,
             MapsClient mapsClient
@@ -41,7 +41,7 @@ public class CarService {
      *
      * @return a list of all vehicles in the CarRepository
      */
-    public List<Car> list() {
+    public List<Car> list () {
         return repository.findAll();
     }
 
@@ -51,14 +51,14 @@ public class CarService {
      * @param id the ID number of the car to gather information on
      * @return the requested car's information, including location and price
      */
-    public Car findById(Long id) {
+    public Car findById (Long id) {
         /**
          * TODO: Find the car by ID from the `repository` if it exists.
          *   If it does not exist, throw a CarNotFoundException
          *   Remove the below code as part of your implementation.
          */
-        Optional<Car> optionalCar = repository.findById(id);
-        if (optionalCar.isPresent()) {
+        Optional<Car> optionalCar = repository.findById( id );
+        if ( optionalCar.isPresent() ) {
             /**
              * TODO: Use the Pricing Web client you create in `VehiclesApiApplication`
              *   to get the price based on the `id` input'
@@ -68,8 +68,8 @@ public class CarService {
              */
             Car car = optionalCar.get();
 
-            String carPrice = priceClient.getPrice(optionalCar.get().getId());
-            car.setPrice(carPrice);
+            String carPrice = priceClient.getPrice( optionalCar.get().getId() );
+            car.setPrice( carPrice );
 
             /**
              * TODO: Use the Maps Web client you create in `VehiclesApiApplication`
@@ -80,11 +80,11 @@ public class CarService {
              * meaning the Maps service needs to be called each time for the address.
              */
 
-            Location carLocation = mapsClient.getAddress(car.getLocation());
-            car.setLocation(carLocation);
+            Location carLocation = mapsClient.getAddress( car.getLocation() );
+            car.setLocation( carLocation );
             return car;
         } else {
-            throw new CarNotFoundException("Car not found");
+            throw new CarNotFoundException( "Car not found" );
         }
     }
 
@@ -94,17 +94,18 @@ public class CarService {
      * @param car A car object, which can be either new or existing
      * @return the new/updated car is stored in the repository
      */
-    public Car save(Car car) {
-        if (car.getId() != null) {
-            return repository.findById(car.getId())
-                    .map(carToBeUpdated -> {
-                        carToBeUpdated.setDetails(car.getDetails());
-                        carToBeUpdated.setLocation(car.getLocation());
-                        return repository.save(carToBeUpdated);
-                    }).orElseThrow(CarNotFoundException::new);
+    public Car save (Car car) {
+        if ( car.getId() != null ) {
+            return repository.findById( car.getId() )
+                    .map( carToBeUpdated -> {
+                        carToBeUpdated.setDetails( car.getDetails() );
+                        carToBeUpdated.setLocation( car.getLocation() );
+                        carToBeUpdated.setCondition( car.getCondition() );
+                        return repository.save( carToBeUpdated );
+                    } ).orElseThrow( CarNotFoundException::new );
         }
 
-        return repository.save(car);
+        return repository.save( car );
     }
 
     /**
@@ -112,21 +113,21 @@ public class CarService {
      *
      * @param id the ID number of the car to delete
      */
-    public void delete(Long id) {
-        Optional<Car> optionalCar = repository.findById(id);
+    public void delete (Long id) {
+        Optional<Car> optionalCar = repository.findById( id );
 
-        if (optionalCar.isPresent()) {
+        if ( optionalCar.isPresent() ) {
             /**
              * TODO: Delete the car from the repository.
              */
             Car car = optionalCar.get();
-            repository.delete(car);
+            repository.delete( car );
         } else {
             /**
              * TODO: Find the car by ID from the `repository` if it exists.
              *   If it does not exist, throw a CarNotFoundException
              */
-            throw new CarNotFoundException(String.format("Car not found with id: {}", id));
+            throw new CarNotFoundException( String.format( "Car not found with id: {}", id ) );
         }
     }
 }

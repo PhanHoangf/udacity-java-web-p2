@@ -62,12 +62,12 @@ public class CarControllerTest {
      * Creates pre-requisites for testing, such as an example car.
      */
     @Before
-    public void setup() {
+    public void setup () {
         Car car = getCar();
-        car.setId(1L);
-        given(carService.save(any())).willReturn(car);
-        given(carService.findById(any())).willReturn(car);
-        given(carService.list()).willReturn(Collections.singletonList(car));
+        car.setId( 1L );
+        given( carService.save( any() ) ).willReturn( car );
+        given( carService.findById( any() ) ).willReturn( car );
+        given( carService.list() ).willReturn( Collections.singletonList( car ) );
     }
 
     /**
@@ -76,14 +76,14 @@ public class CarControllerTest {
      * @throws Exception when car creation fails in the system
      */
     @Test
-    public void createCar() throws Exception {
+    public void createCar () throws Exception {
         Car car = getCar();
         mvc.perform(
-                        post(new URI("/cars"))
-                                .content(json.write(car).getJson())
-                                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isCreated());
+                        post( new URI( "/cars" ) )
+                                .content( json.write( car ).getJson() )
+                                .contentType( MediaType.APPLICATION_JSON_UTF8 )
+                                .accept( MediaType.APPLICATION_JSON_UTF8 ) )
+                .andExpect( status().isCreated() );
     }
 
     /**
@@ -92,16 +92,16 @@ public class CarControllerTest {
      * @throws Exception if the read operation of the vehicle list fails
      */
     @Test
-    public void listCars() throws Exception {
+    public void listCars () throws Exception {
         /**
          * TODO: Add a test to check that the `get` method works by calling
          *   the whole list of vehicles. This should utilize the car from `getCar()`
          *   below (the vehicle will be the first in the list).
          */
-        mvc.perform(get("/cars").contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
-        verify(carService, times(1)).list();
+        mvc.perform( get( "/cars" ).contentType( MediaType.APPLICATION_JSON_UTF8 )
+                        .accept( MediaType.APPLICATION_JSON_UTF8 ) )
+                .andExpect( status().isOk() );
+        verify( carService, times( 1 ) ).list();
     }
 
     /**
@@ -110,16 +110,25 @@ public class CarControllerTest {
      * @throws Exception if the read operation for a single car fails
      */
     @Test
-    public void findCar() throws Exception {
+    public void findCar () throws Exception {
         /**
          * TODO: Add a test to check that the `get` method works by calling
          *   a vehicle by ID. This should utilize the car from `getCar()` below.
          */
-        mvc.perform(get("/cars/1").contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
+        mvc.perform( get( "/cars/1" ).contentType( MediaType.APPLICATION_JSON_UTF8 )
+                        .accept( MediaType.APPLICATION_JSON_UTF8 ) )
+                .andExpect( status().isOk() );
 
-        verify(carService, times(1)).findById(1L);
+        verify( carService, times( 1 ) ).findById( 1L );
+    }
+
+    @Test
+    public void updateCar () throws Exception {
+        Car updateCar = getCar();
+        updateCar.setId( 1L );
+        mvc.perform( put( "/cars/1" ).content( json.write( updateCar ).getJson() )
+                .contentType( MediaType.APPLICATION_JSON_UTF8 )
+                .accept( MediaType.APPLICATION_JSON_UTF8 ) ).andExpect( status().isOk() );
     }
 
     /**
@@ -128,17 +137,17 @@ public class CarControllerTest {
      * @throws Exception if the delete operation of a vehicle fails
      */
     @Test
-    public void deleteCar() throws Exception {
+    public void deleteCar () throws Exception {
         /**
          * TODO: Add a test to check whether a vehicle is appropriately deleted
          *   when the `delete` method is called from the Car Controller. This
          *   should utilize the car from `getCar()` below.
          */
-        mvc.perform(delete("/cars/10").contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isNoContent());
+        mvc.perform( delete( "/cars/10" ).contentType( MediaType.APPLICATION_JSON_UTF8 )
+                        .accept( MediaType.APPLICATION_JSON_UTF8 ) )
+                .andExpect( status().isNoContent() );
 
-        verify(carService, times(1)).delete(10L);
+        verify( carService, times( 1 ) ).delete( 10L );
     }
 
     /**
@@ -146,23 +155,23 @@ public class CarControllerTest {
      *
      * @return an example Car object
      */
-    private Car getCar() {
+    private Car getCar () {
         Car car = new Car();
-        car.setLocation(new Location(40.730610, -73.935242));
+        car.setLocation( new Location( 40.730610, -73.935242 ) );
         Details details = new Details();
-        Manufacturer manufacturer = new Manufacturer(101, "Chevrolet");
-        details.setManufacturer(manufacturer);
-        details.setModel("Impala");
-        details.setMileage(32280);
-        details.setExternalColor("white");
-        details.setBody("sedan");
-        details.setEngine("3.6L V6");
-        details.setFuelType("Gasoline");
-        details.setModelYear(2018);
-        details.setProductionYear(2018);
-        details.setNumberOfDoors(4);
-        car.setDetails(details);
-        car.setCondition(Condition.USED);
+        Manufacturer manufacturer = new Manufacturer( 101, "Chevrolet" );
+        details.setManufacturer( manufacturer );
+        details.setModel( "Impala" );
+        details.setMileage( 32280 );
+        details.setExternalColor( "white" );
+        details.setBody( "sedan" );
+        details.setEngine( "3.6L V6" );
+        details.setFuelType( "Gasoline" );
+        details.setModelYear( 2018 );
+        details.setProductionYear( 2018 );
+        details.setNumberOfDoors( 4 );
+        car.setDetails( details );
+        car.setCondition( Condition.USED );
         return car;
     }
 }
